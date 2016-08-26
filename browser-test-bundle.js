@@ -1,7 +1,9 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -19,43 +21,72 @@ var LoginForm = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (LoginForm.__proto__ || Object.getPrototypeOf(LoginForm)).call(this));
 
-    _this.state = {};
+    _this.state = {
+      username: '',
+      password: ''
+    };
+
+    _this.handleInputChange = _this.handleInputChange.bind(_this);
+    _this.handleFormSubmit = _this.handleFormSubmit.bind(_this);
     return _this;
   }
 
   _createClass(LoginForm, [{
-    key: "render",
+    key: 'handleInputChange',
+    value: function handleInputChange(field, event) {
+      this.setState(_defineProperty({}, field, event.target.value));
+    }
+  }, {
+    key: 'handleFormSubmit',
+    value: function handleFormSubmit(ev) {
+      ev.preventDefault();
+      var _state = this.state;
+      var username = _state.username;
+      var password = _state.password;
+
+
+      if (!username || !password) {
+        return;
+      }
+
+      this.props.onSubmit({
+        username: username,
+        password: password
+      });
+    }
+  }, {
+    key: 'render',
     value: function render() {
       return React.createElement(
-        "form",
-        null,
+        'form',
+        { onSubmit: this.handleFormSubmit },
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "label",
+            'label',
             null,
-            "Username",
-            React.createElement("input", { id: "test-username", type: "text" })
+            'Username',
+            React.createElement('input', { id: 'test-username', type: 'text', value: this.state.username, onChange: this.handleInputChange.bind(this, 'username') })
           )
         ),
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "label",
+            'label',
             null,
-            "Password",
-            React.createElement("input", { id: "test-password", type: "password" })
+            'Password',
+            React.createElement('input', { id: 'test-password', type: 'password', value: this.state.password, onChange: this.handleInputChange.bind(this, 'password') })
           )
         ),
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "button",
-            { type: "submit" },
-            "Log in"
+            'button',
+            { type: 'submit' },
+            'Log in'
           )
         )
       );
@@ -65,10 +96,14 @@ var LoginForm = function (_React$Component) {
   return LoginForm;
 }(React.Component);
 
+LoginForm.propTypes = {
+  onSubmit: React.PropTypes.func
+};
+
 module.exports = LoginForm;
 
 },{"react":416}],2:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -88,28 +123,52 @@ var TwitterMessage = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (TwitterMessage.__proto__ || Object.getPrototypeOf(TwitterMessage)).call(this));
 
-    _this.state = {};
+    _this.state = {
+      message: ''
+    };
+
+    _this.setMessage = _this.setMessage.bind(_this);
     return _this;
   }
 
   _createClass(TwitterMessage, [{
-    key: "render",
+    key: 'setMessage',
+    value: function setMessage(ev) {
+      this.setState({
+        message: ev.target.value
+      });
+    }
+  }, {
+    key: 'render',
     value: function render() {
       return React.createElement(
-        "div",
+        'div',
         null,
         React.createElement(
-          "strong",
+          'strong',
           null,
-          "Your message:"
+          'Your message:'
         ),
-        React.createElement("input", { type: "text" })
+        React.createElement('input', { type: 'text', value: this.state.message, onChange: this.setMessage }),
+        React.createElement(
+          'span',
+          null,
+          this.props.maxChars - this.state.message.length
+        )
       );
     }
   }]);
 
   return TwitterMessage;
 }(React.Component);
+
+TwitterMessage.propTypes = {
+  maxChars: React.PropTypes.number
+};
+
+TwitterMessage.defaultProps = {
+  maxChars: 140
+};
 
 module.exports = TwitterMessage;
 
