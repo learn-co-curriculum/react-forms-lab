@@ -21,7 +21,7 @@ class LoginForm extends React.Component {
 
     if (!this.state.username || !this.state.password) return
 
-    this.props.onSubmit(this.state)
+    this.props.handleLogin(this.state)
   }
 
   render() {
